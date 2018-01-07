@@ -65,8 +65,9 @@ class RabbitConsumer implements com.rabbitmq.client.Consumer {
             if (!consumer.getEndpoint().isAutoAck()) {
                 lock.acquire();
             }
-            //Channel might be open because while we were waiting for the lock, stop() has been succesfully called.
+            //Channel might not be open because while we were waiting for the lock, stop() has been succesfully called.
             if (!channel.isOpen()) {
+                lock.release();
                 return;
             }
 
